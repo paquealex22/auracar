@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://paquealex22.github.io/auracar/sitemap.xml
