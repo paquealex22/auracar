@@ -23,4 +23,68 @@
 <section id="redes" class="section"><div class="wrap"><div class="title"><div class="kicker">06 · REDES SOCIALES</div><h2>Encuentra AuraCar</h2><p>Visita nuestras cuentas oficiales.</p></div><div class="social"><a href="https://www.instagram.com/aura.car507/" target="_blank" rel="noopener"><b>📸 Instagram</b><br><span>@aura.car507</span></a><a href="https://www.tiktok.com/@aura.car7" target="_blank" rel="noopener"><b>🎵 TikTok</b><br><span>@aura.car7</span></a></div></div></section>
 </main>
 <footer><div class="wrap"><b>AuraCar</b> · La atmósfera ideal para tu auto.<br><span class="small">Tu auto, tu estilo, en tus manos. · AuraCar · Siempre contigo.</span></div></footer>
+
+<!-- CHATBOT DE VENTAS AURACAR -->
+<style>
+#ac-chat-launch{position:fixed;right:20px;bottom:20px;z-index:9998;border:0;border-radius:999px;padding:15px 20px;background:linear-gradient(110deg,#1677ff,#18d9ff);color:#00111b;font-weight:800;font-size:15px;box-shadow:0 8px 30px #0008;cursor:pointer}
+#ac-chat{position:fixed;right:20px;bottom:86px;width:min(370px,calc(100vw - 28px));height:min(570px,calc(100dvh - 115px));z-index:9999;background:#061323;border:1px solid #18d9ff70;border-radius:20px;box-shadow:0 18px 60px #000b;display:none;overflow:hidden;color:#f5fbff;font-family:Arial,sans-serif}
+#ac-chat.ac-open{display:flex;flex-direction:column}
+#ac-head{padding:15px 17px;background:linear-gradient(110deg,#0a2850,#063044);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #18d9ff40}
+#ac-head strong{font-size:17px;color:#18d9ff}#ac-head small{display:block;color:#c2d9e8;font-size:11px}
+#ac-close{background:transparent;border:0;color:white;font-size:25px;cursor:pointer}
+#ac-messages{padding:14px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+.ac-msg{max-width:88%;padding:10px 12px;border-radius:13px;font-size:13px;line-height:1.5;white-space:pre-wrap}
+.ac-bot{background:#10283d;align-self:flex-start;border:1px solid #18d9ff25}.ac-user{background:#075a78;align-self:flex-end}
+.ac-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px}
+.ac-quick button,.ac-action{border:1px solid #18d9ff70;background:#09243a;color:#dffaff;border-radius:20px;padding:8px 10px;font-size:12px;cursor:pointer}
+.ac-quick button:hover,.ac-action:hover{background:#104466}
+.ac-product{border:1px solid #18d9ff30;border-radius:12px;padding:10px;margin-top:8px;background:#071b2c}
+.ac-product b{color:#18d9ff}.ac-product p{margin:3px 0 7px;color:#c0d2df;font-size:12px}
+.ac-product button{background:linear-gradient(90deg,#1677ff,#18d9ff);color:#00111b;border:0;border-radius:8px;padding:7px 10px;font-weight:bold;cursor:pointer}
+#ac-entry{display:flex;gap:7px;padding:11px;border-top:1px solid #18d9ff30;background:#04101d}
+#ac-input{min-width:0;flex:1;background:#0b2032;border:1px solid #24516a;border-radius:10px;padding:11px;color:white;outline:none}
+#ac-send{border:0;border-radius:10px;padding:0 14px;background:#18d9ff;color:#00111b;font-weight:800;cursor:pointer}
+#ac-note{font-size:10px;color:#8da9bb;text-align:center;padding:0 10px 9px;background:#04101d}
+@media(max-width:480px){#ac-chat{right:10px;bottom:78px;width:calc(100vw - 20px);height:min(600px,calc(100dvh - 95px))}#ac-chat-launch{right:14px;bottom:14px}}
+</style>
+<button id="ac-chat-launch" type="button" aria-label="Abrir chat de AuraCar">💬 Comprar en AuraCar</button>
+<section id="ac-chat" aria-label="Chat de ventas AuraCar" aria-live="polite">
+ <div id="ac-head"><div><strong>✨ AuraCar Asistente</strong><small>En línea · Atención automática</small></div><button id="ac-close" type="button" aria-label="Cerrar chat">×</button></div>
+ <div id="ac-messages"></div>
+ <div id="ac-entry"><input id="ac-input" type="text" placeholder="Escribe tu consulta..." aria-label="Escribe tu mensaje"><button id="ac-send" type="button">Enviar</button></div>
+ <div id="ac-note">Precios referenciales en USD. Confirma disponibilidad antes de pagar.</div>
+</section>
+<script>
+(function(){
+ const products=[
+  {id:1,name:"Tiras LED ambientales",price:8.99,desc:"Iluminación interior para darle otro ambiente a tu auto."},
+  {id:2,name:"Proyectores LED para puertas",price:6.99,desc:"Proyección de luz de cortesía al abrir las puertas."},
+  {id:3,name:"Portavasos retroiluminados",price:9.99,desc:"Un toque moderno para el interior del vehículo."},
+  {id:4,name:"Funda de timón",price:7.99,desc:"Cubierta de cuero sintético para mejorar el agarre."},
+  {id:5,name:"Organizador de asiento",price:5.99,desc:"Mantén tus objetos organizados durante el viaje."},
+  {id:6,name:"Difusor de aroma",price:3.99,desc:"Aroma agradable y presentación elegante."},
+  {id:7,name:"Molduras negro mate",price:6.99,desc:"Detalle exterior de estilo deportivo."},
+  {id:8,name:"Tiras cromadas aerodinámicas",price:4.99,desc:"Detalles decorativos para el exterior."},
+  {id:9,name:"Centros de llantas personalizados",price:12.99,desc:"Personaliza la apariencia de tus ruedas."}
+ ];
+ const cart={};
+ const panel=document.getElementById("ac-chat"),messages=document.getElementById("ac-messages"),input=document.getElementById("ac-input");
+ const money=n=>"$"+n.toFixed(2);
+ function message(text,who="bot",html=false){const d=document.createElement("div");d.className="ac-msg "+(who==="user"?"ac-user":"ac-bot");if(html)d.innerHTML=text;else d.textContent=text;messages.appendChild(d);messages.scrollTop=messages.scrollHeight;return d}
+ function quick(items){const d=document.createElement("div");d.className="ac-quick";items.forEach(([label,fn])=>{const b=document.createElement("button");b.textContent=label;b.onclick=fn;d.appendChild(b)});messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
+ function showCatalog(list=products){message("Estos son nuestros accesorios disponibles:");list.forEach(p=>{const d=document.createElement("div");d.className="ac-product";d.innerHTML="<b>"+p.name+"</b><p>"+p.desc+"</p><strong>"+money(p.price)+"</strong><br><button type='button'>Agregar al carrito</button>";d.querySelector("button").onclick=()=>add(p.id);messages.appendChild(d)});messages.scrollTop=messages.scrollHeight}
+ function add(id){const p=products.find(x=>x.id===id);cart[id]=(cart[id]||0)+1;message("Agregaste "+p.name+" ("+money(p.price)+") al carrito.");quick([["Ver carrito",showCart],["Seguir comprando",()=>showCatalog()],["Finalizar pedido",checkout]])}
+ function showCart(){const entries=Object.entries(cart);if(!entries.length){message("Tu carrito está vacío. ¿Quieres ver el catálogo?");quick([["Ver productos",()=>showCatalog()]]);return}let total=0,lines=["Pedido AuraCar:"];entries.forEach(([id,qty])=>{const p=products.find(x=>x.id===Number(id));total+=p.price*qty;lines.push(qty+" x "+p.name+" — "+money(p.price*qty))});lines.push("Total estimado: "+money(total));message(lines.join("\n"));quick([["Finalizar pedido",checkout],["Seguir comprando",()=>showCatalog()]])}
+ function checkout(){if(!Object.keys(cart).length){message("Primero agrega algún producto al carrito.");showCatalog();return}const entries=Object.entries(cart);let total=0,lines=["Hola AuraCar, quiero realizar este pedido:"];entries.forEach(([id,qty])=>{const p=products.find(x=>x.id===Number(id));total+=p.price*qty;lines.push(qty+" x "+p.name+" — "+money(p.price*qty))});lines.push("Total estimado: "+money(total));lines.push("¿Me confirman disponibilidad, entrega y forma de pago?");const order=lines.join("\n");message("¡Listo! Tu pedido está preparado. Copia el resumen y envíalo por mensaje directo a nuestro Instagram para confirmar disponibilidad y entrega.");const d=message("","bot");const copy=document.createElement("button");copy.className="ac-action";copy.textContent="📋 Copiar pedido";copy.onclick=()=>{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(order).then(()=>{copy.textContent="¡Pedido copiado!"}).catch(()=>message(order))}else{message(order)}};d.appendChild(copy);const insta=document.createElement("button");insta.className="ac-action";insta.style.marginLeft="6px";insta.textContent="📸 Abrir Instagram";insta.onclick=()=>window.open("https://www.instagram.com/aura.car507/","_blank","noopener");d.appendChild(insta);messages.scrollTop=messages.scrollHeight}
+ function reply(raw){const t=raw.toLowerCase();if(/hola|buenas|buenos|hey/.test(t)){message("¡Hola! 👋 Bienvenido a AuraCar. Estoy aquí para ayudarte a personalizar tu vehículo. ¿Qué deseas hacer?");menu();return}if(/precio|catálogo|catalogo|producto|comprar|vender/.test(t)){showCatalog();return}if(/carrito|pedido|total/.test(t)){showCart();return}if(/led|luz|ilumin/.test(t)){showCatalog(products.slice(0,3));return}if(/interior|timón|timon|aroma|asiento|confort/.test(t)){showCatalog(products.slice(3,6));return}if(/exterior|moldura|cromad|llanta/.test(t)){showCatalog(products.slice(6));return}if(/instagram|contact|humano|persona/.test(t)){message("Puedes escribirnos por Instagram: @aura.car507.");quick([["Abrir Instagram",()=>window.open("https://www.instagram.com/aura.car507/","_blank","noopener")]]);return}message("Puedo mostrarte el catálogo, recomendarte accesorios o ayudarte con tu pedido. Escribe “productos” para comenzar.");menu()}
+ function menu(){quick([["🛍️ Ver productos",()=>showCatalog()],["💡 Iluminación",()=>showCatalog(products.slice(0,3))],["🛋️ Accesorios interiores",()=>showCatalog(products.slice(3,6))],["🚘 Accesorios exteriores",()=>showCatalog(products.slice(6))],["🛒 Mi carrito",showCart]])}
+ function send(){const v=input.value.trim();if(!v)return;message(v,"user");input.value="";reply(v)}
+ document.getElementById("ac-chat-launch").addEventListener("click",()=>{panel.classList.add("ac-open");if(!messages.childElementCount){message("¡Hola! 👋 Soy el asistente virtual de AuraCar. Tenemos accesorios para darle estilo y comodidad a tu auto. ¿Qué te gustaría ver?");menu()}input.focus()});
+ document.getElementById("ac-close").addEventListener("click",()=>panel.classList.remove("ac-open"));
+ document.getElementById("ac-send").addEventListener("click",send);
+ input.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+})();
+</script>
+<!-- FIN CHATBOT AURACAR -->
+
 </body></html>
